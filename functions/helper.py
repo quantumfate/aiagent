@@ -8,7 +8,7 @@ def __message__(action: str, file_path: str, e: Exception) -> str:
     return f"Error: Failed to {action} {file_path}: {e}"
 
 
-def is_valid_target(working_directory: str, file: str = ".") -> tuple[str, bool]:
+def is_in_working_dir(working_directory: str, file: str = ".") -> tuple[str, bool]:
     """Constructs an absolute path from {working_directory} and {file}
 
     Args:

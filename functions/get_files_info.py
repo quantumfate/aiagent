@@ -1,11 +1,11 @@
 import os
-from functions.helper import is_valid_target, read_n_chars_from_file
+from functions.helper import is_in_working_dir, read_n_chars_from_file
 
 
 def get_files_info(working_directory, directory="."):
-    target_dir, valid_target_dir = is_valid_target(working_directory, directory)
+    target_dir, in_working_dir = is_in_working_dir(working_directory, directory)
 
-    if not valid_target_dir:
+    if not in_working_dir:
         return f'Error: Cannot list "{directory}" as it is outside the permitted working directory'
 
     if not os.path.isdir(target_dir):
