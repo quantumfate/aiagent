@@ -4,6 +4,10 @@ import sys
 from config import MAX_CHARS
 
 
+def __message__(action: str, file_path: str, e: Exception) -> str:
+    return f"Error: Failed to {action} {file_path}: {e}"
+
+
 def is_valid_target(working_directory: str, file: str = ".") -> tuple[str, bool]:
     """Constructs an absolute path from {working_directory} and {file}
 
@@ -21,7 +25,7 @@ def is_valid_target(working_directory: str, file: str = ".") -> tuple[str, bool]
     return target, os.path.commonpath([working_dir_abs, target]) == working_dir_abs
 
 
-def read_file(file_path: str) -> str:
+def read_n_chars_from_file(file_path: str) -> str:
     """Reads up to {MAX_CHARS} characters from a given file
 
     Args:
@@ -44,4 +48,27 @@ def read_file(file_path: str) -> str:
         return file_content_string
 
     except OSError as e:
-        raise OSError(f"Failed to read {file_path}: {e}") from e
+        raise OSError(__message__("read", file_path, e)) from e
+
+
+def write_content_to_file(file_path: str, content: str) -> str:
+    """Writes a given {content} to a given {file}
+
+    Args:
+        file_path: File to be written to
+        content: content of the resulting file
+
+    Returns:
+        A success message
+
+    Raises:
+        OSError: Re-throw with additional information
+    """
+    try:
+        with open(file_path, "w") as f:
+            f.write(content)
+        return (
+            f'Successfully wrote to "{file_path}" ({len(content)} characters written)'
+        )
+    except OSError as e:
+        raise OSError(__message__("write", file_path, e)) from e

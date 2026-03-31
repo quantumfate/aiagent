@@ -1,5 +1,5 @@
 import os
-from functions.helper import is_valid_target, read_file
+from functions.helper import is_valid_target, read_n_chars_from_file
 
 
 def get_files_info(working_directory, directory="."):
