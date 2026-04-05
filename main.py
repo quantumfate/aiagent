@@ -6,6 +6,7 @@ import threading
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
+from config import SYSTEM_PROMPT
 
 
 def main():
@@ -21,6 +22,9 @@ def main():
     response = client.models.generate_content(
         model="gemini-2.5-flash",
         contents=messages,
+        config=types.GenerateContentConfig(
+            system_instruction=SYSTEM_PROMPT, temperature=0
+        ),
     )
 
     metadata = response.usage_metadata
