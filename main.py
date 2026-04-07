@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 from config import SYSTEM_PROMPT
+from call_function import available_functions
 
 
 def main():
@@ -23,7 +24,7 @@ def main():
         model="gemini-2.5-flash",
         contents=messages,
         config=types.GenerateContentConfig(
-            system_instruction=SYSTEM_PROMPT, temperature=0
+            system_instruction=SYSTEM_PROMPT, temperature=0, tools=[available_functions]
         ),
     )
 
@@ -34,7 +35,11 @@ def main():
         print(f"Prompt tokens: {metadata.prompt_token_count}")
         print(f"Response tokens: {metadata.candidates_token_count}")
 
-    print(response.text)
+    if response.function_calls:
+        for function_call in response.function_calls:
+            print(f"Calling function: {function_call.name}({function_call.args})")
+    else:
+        print(response.text)
 
 
 if __name__ == "__main__":
