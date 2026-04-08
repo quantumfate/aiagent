@@ -46,12 +46,12 @@ def __build_output(abritary_process: subprocess.CompletedProcess[str]) -> str:
     stderr_len = len(abritary_process.stderr)
 
     if max(stdout_len, stderr_len) == 0:
-        output += "No output produced\n\n"
+        output += "No output produced\n"
     else:
         if stderr_len != 0:
-            output += f"STDERR: {abritary_process.stderr}\n\n"
+            output += f"STDERR: {abritary_process.stderr}\n"
         if stdout_len != 0:
-            output += f"STDOUT: {abritary_process.stdout}\n\n"
+            output += f"STDOUT: {abritary_process.stdout}\n"
     return output
 
 

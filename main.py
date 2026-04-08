@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 from config import SYSTEM_PROMPT
-from call_function import available_functions
+from call_function import available_functions, call_function
 
 
 def main():
@@ -35,9 +35,28 @@ def main():
         print(f"Prompt tokens: {metadata.prompt_token_count}")
         print(f"Response tokens: {metadata.candidates_token_count}")
 
+    function_results = []
     if response.function_calls:
         for function_call in response.function_calls:
-            print(f"Calling function: {function_call.name}({function_call.args})")
+            function_call_result = call_function(function_call)
+
+            if not function_call_result.parts:
+                raise Exception("Something within the SDK went wrong")
+
+            function_response_part = function_call_result.parts[0]
+            if function_response_part.function_response:
+                if function_response_part.function_response.response:
+                    function_results.append(function_response_part)
+
+                    if args.verbose:
+                        print(f"-> {function_response_part.function_response.response}")
+
+                else:
+                    raise Exception("No response received from LLM")
+            else:
+                raise Exception("Something went wrong")
+
+            # print(f"Calling function: {function_call.name}({function_call.args})")
     else:
         print(response.text)
 
